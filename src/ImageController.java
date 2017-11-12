@@ -1,3 +1,11 @@
+/*
+ * Class : Main
+ * Description : Driver class to instantiate and instance of memegrame applicaton
+ * Revision Date : 11/11/2017
+ * Revision Number: 1
+ * Authors : Team Foxtrot 
+ */
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -11,18 +19,24 @@ import javax.imageio.ImageIO;
 public class ImageController{
 
     private static int maxWidth = 600;
-    private static int maxHeight = 600;
+    private static int maxHeight = 400;
 
     public ImageController(){ //Constructor
 
     }
+    
+    
+    public BufferedImage getImage(File f) throws IOException{
 
-    public BufferedImage getImage(String path) throws IOException{
-        BufferedImage img = ImageIO.read(new File(path));
-        return resizeImage(img, path);
+    	String path = f.getAbsolutePath();
+    	String[] s = path.split(".", 2);  //split string on the period to find file type
+        BufferedImage img = ImageIO.read(f);
+        return resizeImage(img, path, s[1]);
+ 
     }
-
-    public BufferedImage resizeImage(BufferedImage resizeMe, String path) throws IOException {
+    
+    //Resizes the image and saves the image to the same name
+    public BufferedImage resizeImage(BufferedImage resizeMe, String path, String fileType) throws IOException {
 
         int type = resizeMe.getType() ==0? BufferedImage.TYPE_INT_ARGB : resizeMe.getType();
 
@@ -48,7 +62,8 @@ public class ImageController{
         g.drawImage(resizeMe, 0, 0, fWidth, fHeight, null);
         g.dispose();
 
-        ImageIO.write(resizedImage, "png", new File("assets/test.png"));
+        ImageIO.write(resizedImage, fileType, new File("path"));
+       
         return resizedImage;
     }
 

@@ -1,20 +1,18 @@
-/*
- * Class : Main
- * Description : Driver class to instantiate and instance of memegrame applicaton
- * Revision Date : 11/11/2017
- * Revision Number: 1
- * Authors : Team Foxtrot 
- */
-
 import java.io.IOException;
+
+import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.files.UploadErrorException;
 
 
 public class Main {
 
-
-    public static void main(String[] args) throws IOException {
-        // TODO Auto-generated method stub
-        Memeagram m = new Memeagram();
-    }
+	
+	public static void main(String[] args) throws IOException, UploadErrorException, DbxException {
+		// TODO Auto-generated method stub
+		Memeagram m = new Memeagram();
+		DropBoxController dbc = new DropBoxController();
+		try {dbc.connect();} catch(DbxException e) {}
+		dbc.uploadTestFile();
+	}
 
 }

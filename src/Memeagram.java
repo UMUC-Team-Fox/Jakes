@@ -6,6 +6,8 @@
  * Authors : Team Foxtrot 
  */
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -20,12 +22,14 @@ public class Memeagram{
 
     JFrame f;
     JPanel mainPanel,createPanel,browsePanel;
-    JButton btnFileChooser;
+    JButton btnFileChooser, btnAddText;
+    JTextField jtf;
     JTabbedPane tp;
-    BufferedImage image;
-    JLabel pic;
+    BufferedImage cImage;
+    JLabel imageLabel;
     ImageController ic;
     JFileChooser jfc;
+    File workingFile;
 
     public Memeagram() throws IOException{  //Constructor
         f = new JFrame();
@@ -38,42 +42,59 @@ public class Memeagram{
         //Panels and layouts
         mainPanel = new JPanel();
         createPanel = new JPanel();
-        createPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 30));
         browsePanel = new JPanel();
         
         //Objects and configurations
-        //image = ic.getImage("assets/javaone-rockstar.gif");
+        imageLabel = new JLabel();
+        imageLabel.setSize(600, 600);
+        imageLabel.setBackground(Color.white);
 
         
         
         //Interactive objects and configurations
         btnFileChooser = new JButton("Browse");
+        btnAddText = new JButton("Add Text");
+        jtf = new JTextField(15);
         
         //Adding objects to panels
         createPanel.add(btnFileChooser);
+        createPanel.add(jtf);
+        createPanel.add(btnAddText);
+        createPanel.add(imageLabel);
       
         //Listeners
         //Button listener for file chooser button
         btnFileChooser.addActionListener(new ActionListener() {
 
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = jfc.showOpenDialog(null);
 				if(returnValue == JFileChooser.APPROVE_OPTION) {
 						
-					    File f = jfc.getSelectedFile();
+					    workingFile = jfc.getSelectedFile();
 					    try{
-					    image = ic.getImage(f);
-						pic = new JLabel(new ImageIcon(image));
-				        pic.setSize(600, 400);
-				        createPanel.add(pic);
+					    cImage = ic.getImage(workingFile);
+					    cImage = ic.resizeImage(cImage, 400, 400);
+					    imageLabel.setIcon(new ImageIcon(cImage));
 						createPanel.validate();
-						createPanel.repaint();
+						createPanel.repaint(); // refresh the create panel
 					    }catch(IOException ex) {}
 				}
 			}
         	
         });
+        
+        //Button Listener for Add Text button
+        btnAddText.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				
+				try{ic.addText(cImage, jtf.getText());} catch(IOException ex){}
+				createPanel.validate();
+				createPanel.repaint(); // refresh the create panel
+			}
+        	
+        });
+        
         
         //Tabbed Pane setup
         tp = new JTabbedPane();
